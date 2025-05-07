@@ -1,7 +1,7 @@
 import pygame.sprite
 
-class menuButton():
-    def __init__(self, x, y, width, height):
+class MenuButton():
+    def __init__(self, x, y, width, height, text, font):
         super().__init__()
 
         self.x = x
@@ -13,4 +13,21 @@ class menuButton():
         self.textPos = (self.width / 2, self.height / 2)
         self.textColour = (255, 255, 255)
 
-        self.bgColour(255,255,255,)
+        self.bgNoHighlightColour = (255,255,255, 0.2)
+        self.bgHighlightColour = (255,255,255,1)
+
+        self.currColour = self.bgNoHighlightColour
+
+        self.text = text
+        self.font = font
+
+        self.hitBox = pygame.Surface((width, height))
+        self.hitBox.fill(self.currColour)
+
+    def highlight(self):
+        self.currColour = self.bgHighlightColour
+        self.hitBox.fill(self.currColour)
+
+    def unhighlight(self):
+        self.currColour = self.bgNoHighlightColour
+        self.hitBox

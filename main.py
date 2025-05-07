@@ -1,6 +1,7 @@
 import pygame
 
 from player import Player
+from menuButton import MenuButton
 
 pygame.init()
 
@@ -22,10 +23,24 @@ with open("Player-Data\CurrentPlayerLevel.txt") as level:
 
 def openStartScreen():
     global WIDTH, HEIGHT, screen, clock, FPS, gameState
-    playAndLevelsButtonsFont = pygame.font.SysFont(None, 24)
-    quitFont = pygame.font.SysFont(None, 12)
+    continueButtonFont = pygame.font.SysFont(None, 24)
+    levelsButtonFont = pygame.font.SysFont(None, 12)
+    quitButtonFont = pygame.font.SysFont(None,10)
     startScreenRunning = True
     menuIndex = 0
+
+    menuContinueButton = MenuButton(WIDTH / 2, HEIGHT / 3, WIDTH / 5, HEIGHT / 5, "CONTINUE", continueButtonFont) #h: 1/3
+    menuLevelsButton = MenuButton(WIDTH / 2, 7 * HEIGHT / 12, WIDTH / 7, HEIGHT / 7, "LEVELS", levelsButtonFont) #h: 7/12
+    menuQuitButton = MenuButton(WIDTH / 2, 9 * HEIGHT / 12, WIDTH / 8, HEIGHT / 8, "QUIT", quitButtonFont) #h: 9 / 12
+
+    buttonGroup = pygame.sprite.Group()
+    buttonGroup.add(menuContinueButton)
+    buttonGroup.add(menuLevelsButton)
+    buttonGroup.add(menuQuitButton)
+
+    bgMenuImage = pygame.image.load("Images/Backgrounds/BGPH.png").convert_alpha()
+    bgMenuImage = pygame.transform.scale(bgMenuImage, (WIDTH, HEIGHT))
+
     while startScreenRunning:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -38,13 +53,29 @@ def openStartScreen():
                     gameState = "endGame"
                     startScreenRunning = False
                     continue
+
                 # Menu Highlight / Selection Change
                 if event.key == pygame.K_DOWN:
-                    if menuIndex < 2:
+                    if menuIndex == 0:
                         menuIndex += 1
+                        menuContinueButton.unhighlight()
+                        menuLevelsButton.highlight()
+
+                    elif menuIndex == 1:
+                        menuIndex += 1
+                        menuLevelsButton.unhighlight()
+                        menuQuitButton.highlight()
+
                 if event.key == pygame.K_UP:
-                    if menuIndex > 0:
+                    if menuIndex == 2:
                         menuIndex -= 1
+                        menuQuitButton.unhighlight()
+                        menuLevelsButton.highlight()
+
+                    elif menuIndex == 1:
+                        menuIndex -= 1
+                        menuLevelsButton.unhighlight()
+                        menuContinueButton.highlight()
                 #---
 
                 # Menu Selection Interactions
@@ -62,6 +93,8 @@ def openStartScreen():
                         startScreenRunning = False
                         continue
                 #---
+        screen.blit(bgMenuImage, (0, 0))
+        buttonGroup.draw(screen)
 
 
 def openGamePlay(level):

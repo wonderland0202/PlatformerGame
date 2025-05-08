@@ -7,9 +7,9 @@ pygame.init()
 
 #Always Global
 
-WIDTH, HEIGHT = 145, 90
+WIDTH, HEIGHT = 1450, 900
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("application")
+pygame.display.set_caption("Platformer")
 clock = pygame.time.Clock()
 FPS = 144
 gameState = "startScreen"
@@ -22,7 +22,7 @@ with open("Player-Data\CurrentPlayerLevel.txt") as level:
   playerLevel = int(level.read())
 
 def openStartScreen():
-    global WIDTH, HEIGHT, screen, clock, FPS, gameState
+    global WIDTH, HEIGHT, screen, clock, FPS, gameState, pygame
     continueButtonFont = pygame.font.SysFont(None, 24)
     levelsButtonFont = pygame.font.SysFont(None, 12)
     quitButtonFont = pygame.font.SysFont(None,10)
@@ -34,6 +34,7 @@ def openStartScreen():
     menuQuitButton = MenuButton(WIDTH / 2, 9 * HEIGHT / 12, WIDTH / 8, HEIGHT / 8, "QUIT", quitButtonFont) #h: 9 / 12
 
     buttonGroup = pygame.sprite.Group()
+
     buttonGroup.add(menuContinueButton)
     buttonGroup.add(menuLevelsButton)
     buttonGroup.add(menuQuitButton)
@@ -93,8 +94,14 @@ def openStartScreen():
                         startScreenRunning = False
                         continue
                 #---
+
         screen.blit(bgMenuImage, (0, 0))
+
         buttonGroup.draw(screen)
+
+
+        clock.tick(FPS)
+        pygame.display.update()
 
 
 def openGamePlay(level):
